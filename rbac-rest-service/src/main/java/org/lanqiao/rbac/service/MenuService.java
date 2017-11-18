@@ -1,13 +1,10 @@
 package org.lanqiao.rbac.service;
 
-import org.lanqiao.rbac.repository.MenuMapper;
-import org.lanqiao.rbac.entity.Menu;
 import org.lanqiao.rbac.base.AbstractService;
-import org.springframework.beans.factory.annotation.Autowired;
+import org.lanqiao.rbac.entity.Menu;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import javax.annotation.Resource;
 import java.util.List;
 
 
@@ -26,4 +23,5 @@ public class MenuService extends AbstractService<Menu> {
   public List<Menu> findByPid(Integer pid){
     return mapper.selectByPid(pid);
   }
+  public List<Menu> findByUserId(Integer userid){return mapper.selectMenuByUserId(userid);}
 }

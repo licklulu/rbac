@@ -31,16 +31,12 @@
         var userTable = table.render(
             {
                 elem: '#userTable',  // 原始的table元素
-                //height:500,
-                url: 'http://localhost:8080/rbac-rest-service/rbac/account/userinfo', // 异步数据的地址
-                      //url:'userData.json', // 异步数据的地址
+                url: "http://localhost:8080/rbac-rest-service/rbac/role", // 异步数据的地址
                 page: true,  // 是否分页
                 id: 'userTable',
-                cols: [[{field: 'id', width: 80, sort: true, title: 'ID'},
-                    {field: 'account', width: 80, title: '账号'},
-                    {field: 'userProfile.', width: 80, title: '昵称'},
-//                    {field: 'userProfile.realName', width: 100, title: '真实姓名'},
-//                    {field: 'userProfile.gender', width: 100, title: '性别'}
+                cols: [[{field: 'id', width: 50, sort: true, title: 'ID'},
+                    {field: 'name', width: 100, title: '名字'},
+                    {field: 'description', width: 200, title: '描述'}
                 ]]
             });
     });

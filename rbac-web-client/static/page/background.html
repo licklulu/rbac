@@ -1,0 +1,189 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+    <title>rbac权限管理系统</title>
+    <meta name="renderer" content="webkit">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="format-detection" content="telephone=no">
+
+    <link rel="stylesheet" href="../css/layui.css" media="all">
+    <script>
+        var thisMenu = 0;
+    </script>
+</head>
+<body>
+<div class="layui-layout layui-layout-admin">
+    <div class="layui-header">
+        <div class="layui-logo">rbac权限管理</div>
+        <ul id="menu" class="layui-nav layui-layout-left">
+
+        </ul>
+        <ul class="layui-nav layui-layout-right">
+            <li class="layui-nav-item" id="userInfo">
+
+            </li>
+            <li class="layui-nav-item"><a class="zx" href="">注销</a></li>
+        </ul>
+    </div>
+
+    <div class="layui-side layui-bg-black">
+        <div class="layui-side-scroll">
+            <ul id="subMenu" class="layui-nav layui-nav-tree" lay-filter="test">
+
+            </ul>
+        </div>
+    </div>
+
+    <div class="layui-body" id="content">
+
+    </div>
+
+    <div class="layui-footer">
+    </div>
+</div>
+<script src="../layui.js" charset="utf-8"></script>
+
+
+<script id="contentTemp" type="text/html">
+    {{d}}
+</script>
+<script id="userInfoTemp" type="text/html">
+    <a>
+        <span>你好！</span>
+        {{ d.nickName}}
+    </a>
+</script>
+<script id="menuTemp" type="text/html">
+    {{#  layui.each(d, function(index, item){ }}
+
+    {{#  if(item.pid === 0){ }}
+    {{#  if(index === 0){ }}
+    {{#  thisMenu =  item.id}}
+    <li  class="layui-nav-item">
+
+        <a class="menu" value={{item.id}}>{{item.title}}</a>
+    </li>
+    {{#  }else{ }}
+    <li  class="layui-nav-item">
+        <a class="menu" value={{item.id}}>{{item.title}}</a>
+    </li>
+    {{#  } }}
+
+    {{# } }); }}
+</script>
+
+<script id="subMenuTemp" type="text/html">
+    {{#  layui.each(d, function(index, item){ }}
+
+    {{#  if(item.pid === thisMenu){ }}
+    <li  class="layui-nav-item">
+        <a class="subMenu" value={{item.id}}>{{item.title}}</a>
+    </li>
+    {{#  } }}
+
+    {{#  }); }}
+</script>
+
+<!--layui-this-->
+<script>
+    //JavaScript代码区域
+    layui.use(['element','laytpl','jquery'], function () {
+        var element=layui.element;
+        var laytpl=layui.laytpl;
+        var $ = layui.jquery;
+
+        sessionStorage.userid=1;
+
+        $.get("http://localhost:8080/rbac-rest-service/rbac/user/profile/"+sessionStorage.userid)
+            .then(function (result){
+                var data = result.data;
+                //字符串转换
+                var getTpl = userInfoTemp.innerHTML
+                    ,userInfo = document.getElementById('userInfo');
+                laytpl(getTpl).render(data, function(html){
+                    userInfo.innerHTML = html;
+                });
+            });
+
+        $.get("http://localhost:8080/rbac-rest-service/rbac/menu/user/"+sessionStorage.userid)
+            .then(function (result){
+
+
+                var data = result.data;
+                var getTpl = menuTemp.innerHTML
+                    ,userInfo = document.getElementById('menu');
+                laytpl(getTpl).render(data, function(html){
+                    //alert(userInfo);
+                    userInfo.innerHTML = html;
+                });
+                alert(userInfo);
+                $(".menu").click(function () {
+
+                //加载顺序
+
+                    thisMenu = parseInt($(this).attr("value"));
+                    //alert(thisMenu);
+                    getTpl = subMenuTemp.innerHTML
+                        ,userInfo = document.getElementById('subMenu');
+                    laytpl(getTpl).render(data, function(html){
+                        userInfo.innerHTML = html;
+                    });
+
+                    renderSubMenu();
+                });
+                getTpl = subMenuTemp.innerHTML
+                    ,userInfo = document.getElementById('subMenu');
+                laytpl(getTpl).render(data, function(html){
+                    userInfo.innerHTML = html;
+                });
+
+            });
+
+//        //Error Happening Area
+//        renderSubMenu();
+//        data="<object type='text/html' data='user/userList.html' width='100%' height='100%'></object>"
+//            ,bodyContent = document.getElementById('content');
+//        laytpl(getTpl).render(data, function(html){
+//            bodyContent.innerHTML = html;
+//        });
+//        //Error Happening Area
+
+
+
+        function renderSubMenu() {
+            $(".subMenu").click(function () {
+
+                value = parseInt($(this).attr("value"));
+
+                name = "user/userList.html";
+                switch(value){
+                    case 3:name="menu/menuPage.html";break;
+                    case 4:name="role/rolePage.html";break;
+                    case 5:name="user/userList.html";break;
+                }
+//                alert(value);
+                data2 ="<object type='text/html' data="+name+" width='100%' height='100%'></object>";
+                //命名相同data
+                //style覆盖
+                getTpl = contentTemp.innerHTML,
+                    contentIn = document.getElementById('content');
+
+
+                laytpl(getTpl).render(data2, function(html){
+                    contentIn.innerHTML = html;
+                });
+
+
+            })
+
+        }
+
+    });
+</script>
+</body>
+</html>

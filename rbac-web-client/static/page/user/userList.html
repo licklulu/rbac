@@ -1,0 +1,117 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+    <link rel="stylesheet" href="../../../static/css/layui.css" media="all">
+
+    <style type="text/css">
+        #addUser {
+            margin-left: 40%;
+        }
+    </style>
+
+
+</head>
+<body>
+
+<div class="layui-form-item">
+
+    <label class="layui-form-label">用户编号</label>
+    <div class="layui-input-inline">
+        <input name="userid" lay-verify="required" placeholder="请输入" autocomplete="off" class="layui-input" type="text">
+    </div>
+
+    <select name="city" lay-verify="">
+        <option value="">请选择性别</option>
+        <option value="0">男</option>
+        <option value="1">女</option>
+    </select>
+
+</div>
+
+
+<div id="addUser">
+    <button class="layui-btn layui-btn-normal">查找用户</button>
+    <button class="layui-btn layui-btn-normal" onclick="addUser()">添加用户</button>
+</div>
+
+<script>
+    function addUser() {
+        layer.open({
+            type: 2,
+            title: '添加用户',
+            skin: 'layui-layer-rim', //加上边框
+            //area: ['420px', '240px'], //宽高
+            area: ['480px', '60%'],
+            content: 'addUser.html'
+
+        });
+    }
+</script>
+
+<div style="padding: 15px;">
+    <table id="userTable"/>
+
+    <script src="../../layui.js" charset="utf-8"></script>
+    <script type="text/javascript">
+        layui.use(['table', 'form', 'jquery'], function (table, form, $) {
+            /* 初始化表格 */
+            var userTable = table.render({
+                elem: '#userTable',  // 原始的table元素
+                //height:500,
+                url: 'http://localhost:8080/rbac-rest-service/rbac/account/userinfo', // 异步数据的地址
+                page: true,  // 是否分页
+                id: 'userTable',
+                cols: [[
+                    {field: 'id', width: 80, sort: true, title: 'ID'},
+                    {field: 'account', width: 80, title: '账号'},
+                    {field: 'userProfile.nickName', width: 80, title: '昵称'},
+//                    {field: 'userProfile.realName', width: 100, title: '真实姓名'},
+//                    {field: 'userProfile.gender', width: 100, title: '性别'},
+{
+                        fixed: 'right',
+                        width: 160,
+                        align: 'center',
+                        toolbar: '#barDemo'
+                    } //这里的toolbar值是模板元素的选择器
+                ]]
+            });
+
+            table.on('tool', function (obj) { //注：tool是工具条事件名，test是table原始容器的属性 lay-filter="对应的值"
+                var data = obj.data; //获得当前行数据
+                var layEvent = obj.event; //获得 lay-event 对应的值
+                var tr = obj.tr;
+                localStorage['user'] = JSON.stringify(obj.data);
+                //获得当前行 tr 的DOM对象
+                if (layEvent === 'del') { //删除
+                    layer.confirm('删除？', function (index) {
+                        obj.del();
+                        layer.close(index);
+                        $.post("http://localhost:8080/rbac-rest-service/rbac/user/profile/" + data.id
+                            , {_method: "delete"}, function () {
+                                layer.msg("删除成功");
+                            });
+                    });
+                } else if (layEvent === 'edit') { //编辑
+                    layer.open({
+                        type: 2,
+                        title: '修改账号信息',
+                        skin: 'layui-layer-rim', //加上边框
+                        area: ['480px', '60%'],
+                        content: 'editUser.html'
+                    });
+                }
+            });
+        });
+    </script>
+
+    <script type="text/html" id="barDemo">
+        <a class="layui-btn layui-btn-mini" lay-event="edit">编辑</a>
+        <a class="layui-btn layui-btn-danger layui-btn-mini" lay-event="del">删除</a>
+    </script>
+
+
+</div>
+</body>
+</html>

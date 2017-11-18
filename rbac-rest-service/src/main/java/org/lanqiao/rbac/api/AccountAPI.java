@@ -19,6 +19,7 @@ import org.web2017.web.rest.ResultGenerator;
 
 import javax.annotation.Resource;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 import java.util.UUID;
 
@@ -66,6 +67,13 @@ public class AccountAPI {
     return ResultGenerator.genSuccessResult(pageInfo);
   }
 
+  @GetMapping("userinfo")
+  @ApiOperation("分页展示账户详细信息")
+  public Result list2(Integer page,Integer limit) {
+    PageInfo pageInfo =  accountService.findUserInfo(page,limit);
+    return ResultGenerator.genSuccessLayUIResult(pageInfo.getList(),pageInfo.getTotal());
+  }
+
   @RequestMapping(value = "/login",method = {RequestMethod.GET,RequestMethod.POST})
   @ApiOperation(value = "登录验证", /*httpMethod = "GET",*/ /*response = Result.class,*/ notes = "登录验证")
   public Result login(Account account) {
@@ -84,17 +92,23 @@ public class AccountAPI {
       }
     }
   }
-
+//  @GetMapping("userInfo")
+//  public Result list2() {
+////    PageInfo pageInfo = accountService.selectAccountInfo(page,limit);
+//    List<UserInfo> userInfos = accountService.selectAccountInfo2();
+//    return ResultGenerator.genSuccessResult(userInfos);
+//  }
   private String check(Account account) {
     final String password = account.getPassword(); // 明文密码
     /*数据库中存储的是md5+盐加密后的密码，因此这里要把加密后的密码传入*/
     final String md5Password = MD5Util.md5(password, SysConst.SALT);
     AuthenticationToken token = new UsernamePasswordToken(account.getAccount(), md5Password);
     Subject currentSubject = SecurityUtils.getSubject();
-    currentSubject.login(token);
+    currentSubject.login(token);// 这句话触发框架去访问Realm的doGetAuthenticationInfo
     String serverToken = UUID.randomUUID().toString().replaceAll("-", "");
     return serverToken;
   }
+  //这个接口不符合rest风格
 
   @RequestMapping("/unauthorized")
   @ResponseStatus(value = HttpStatus.UNAUTHORIZED)

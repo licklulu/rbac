@@ -1,7 +1,7 @@
 package org.lanqiao.rbac.entity;
 
-import java.util.Date;
 import javax.persistence.*;
+import java.util.Date;
 
 @Table(name = "rbac_account")
 public class Account {

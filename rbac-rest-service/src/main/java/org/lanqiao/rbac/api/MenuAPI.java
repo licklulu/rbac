@@ -1,11 +1,11 @@
 package org.lanqiao.rbac.api;
 
-import org.web2017.web.rest.Result;
-import org.web2017.web.rest.ResultGenerator;
+import com.github.pagehelper.PageInfo;
 import org.lanqiao.rbac.entity.Menu;
 import org.lanqiao.rbac.service.MenuService;
-import com.github.pagehelper.PageInfo;
 import org.springframework.web.bind.annotation.*;
+import org.web2017.web.rest.Result;
+import org.web2017.web.rest.ResultGenerator;
 
 import javax.annotation.Resource;
 
@@ -42,12 +42,19 @@ public class MenuAPI {
     }
 
     @GetMapping
-    public Result list(Integer pageNumber, Integer pageSize) {
-        PageInfo pageInfo = menuService.findAll(pageNumber,pageSize);
-        return ResultGenerator.genSuccessResult(pageInfo);
+    public Result list(Integer page, Integer limit) {
+        PageInfo pageInfo = menuService.findAll(page,limit);
+        return ResultGenerator.genSuccessLayUIResult(pageInfo.getList(),pageInfo.getTotal());
     }
+
+
+
     @GetMapping("/p/{pid}") // /rbac/menu/1
     public Result list(@PathVariable("pid") Integer pid){
         return ResultGenerator.genSuccessResult(menuService.findByPid(pid));
+    }
+    @GetMapping("/user/{userid}")
+    public Result list2(@PathVariable("userid") Integer userid){
+        return ResultGenerator.genSuccessResult(menuService.findByUserId(userid));
     }
 }

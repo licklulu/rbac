@@ -16,8 +16,22 @@
     <result column="gmt_create" jdbcType="TIMESTAMP" property="gmtCreate" />
   </resultMap>
 
+
+
   <select id="selectByPid" resultMap="BaseResultMap" parameterType="int">
     select * from rbac_menu
     where pid=#{pid}
+  </select>
+
+  <select id="selectMenuByUserId" resultMap="BaseResultMap" parameterType="int">
+  select * from rbac_menu where id
+    in (select menu_id from rbac_role_menu where role_id
+    in (select role_id from rbac_user_role where user_id = #{userid}))
+  </select>
+
+  <select id="">
+    select id,title,url,pid
+    from rbac_menu
+    where is_button=0,state=1
   </select>
 </mapper>

@@ -9,12 +9,29 @@
     <result column="user_profile_id" jdbcType="INTEGER" property="userProfileId" />
     <result column="account" jdbcType="VARCHAR" property="account" />
     <result column="password" jdbcType="VARCHAR" property="password" />
-    <result column="type" jdbcType="SMALLINT" property="type" />
-    <result column="login_time" jdbcType="TIMESTAMP" property="loginTime" />
-    <result column="last_login_time" jdbcType="TIMESTAMP" property="lastLoginTime" />
-    <result column="gmt_create" jdbcType="TIMESTAMP" property="gmtCreate" />
-    <result column="gmt_modified" jdbcType="TIMESTAMP" property="gmtModified" />
   </resultMap>
+
+  <resultMap id="UserResultMap" type="org.lanqiao.rbac.dto.UserDto">
+    <id column="id" jdbcType="INTEGER" property="id"/>
+    <result column="account" jdbcType="VARCHAR" property="account"/>
+    <result column="password" jdbcType="VARCHAR" property="password"/>
+    <association property="userProfile" javaType="org.lanqiao.rbac.entity.UserProfile">
+      <result column="nick_name" jdbcType="VARCHAR" property="nickName"/>
+      <result column="real_name" jdbcType="VARCHAR" property="realName"/>
+      <result column="gender" jdbcType="BIT" property="gender"/>
+    </association>
+  </resultMap>
+
+  <!--<resultMap id="UserInfoResultMap" type="org.lanqiao.rbac.dto.UserDto">-->
+    <!--<id column="id" jdbcType="INTEGER" property="id" />-->
+    <!--<result column="account" jdbcType="VARCHAR" property="account" />-->
+    <!--<result column="password" jdbcType="VARCHAR" property="password" />-->
+    <!--<association property="userProfile" javaType="org.lanqiao.rbac.entity.UserProfile" >-->
+      <!--<result column="nick_name" jdbcType="VARCHAR" property="nickName" />-->
+      <!--<result column="real_name" jdbcType="VARCHAR" property="realName" />-->
+      <!--<result column="gender" jdbcType="BIT" property="gender" />-->
+    <!--</association>-->
+  <!--</resultMap>-->
 
   <select id="selectPermissionsById" parameterType="int" resultType="string">
     select menu.url
@@ -23,6 +40,18 @@
      JOIN rbac_role role ON userrole.role_id=role.id
      JOIN rbac_role_menu rolemenu ON  role.id=rolemenu.role_id
      JOIN rbac_menu menu ON rolemenu.menu_id=menu.id
-    WHERE acc.id=#{param1};
+    WHERE acc.id=#{param1}
+  </select>
+  <!--不要写分号-->
+  <select id="selectUserInfo"  resultMap="UserResultMap">
+    select a.id as id,
+    a.account as account ,
+    a.password as password,
+    u.nick_name as nick_name,
+    u.real_name as real_name,
+    u.gender as gender
+    from rbac_account a
+    join rbac_user_profile u
+    on a.user_profile_id = u.id
   </select>
 </mapper>

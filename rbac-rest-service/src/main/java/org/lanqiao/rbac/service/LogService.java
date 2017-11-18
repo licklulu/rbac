@@ -1,13 +1,9 @@
 package org.lanqiao.rbac.service;
 
-import org.lanqiao.rbac.repository.LogMapper;
-import org.lanqiao.rbac.entity.Log;
 import org.lanqiao.rbac.base.AbstractService;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
-
-import javax.annotation.Resource;
+ import org.lanqiao.rbac.entity.Log;
+ import org.springframework.stereotype.Service;
+ import org.springframework.transaction.annotation.Transactional;
 
 
 /**

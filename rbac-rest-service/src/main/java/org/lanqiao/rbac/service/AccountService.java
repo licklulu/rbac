@@ -1,6 +1,10 @@
 package org.lanqiao.rbac.service;
 
+import com.github.pagehelper.ISelect;
+import com.github.pagehelper.PageHelper;
+import com.github.pagehelper.PageInfo;
 import org.lanqiao.rbac.base.AbstractService;
+import org.lanqiao.rbac.dto.UserDto;
 import org.lanqiao.rbac.entity.Account;
 import org.lanqiao.rbac.repository.AccountMapper;
 import org.springframework.stereotype.Service;
@@ -8,6 +12,7 @@ import org.springframework.transaction.annotation.Transactional;
 import org.web2017.shiro.IAccountService;
 import tk.mybatis.mapper.entity.Condition;
 
+import java.util.List;
 import java.util.Set;
 
 
@@ -35,6 +40,21 @@ public class AccountService extends AbstractService<Account> implements IAccount
     condition.createCriteria().andEqualTo("account", account);
     return mapper.selectByCondition(condition).get(0).getPassword();
   }
+
+//  public List<UserDto> findUserInfo() {
+//    return mapper.selectUserInfo();
+//  }
+
+
+  public PageInfo  findUserInfo(Integer pageNumber, Integer pageSize) {
+    return PageHelper.startPage(pageNumber, pageSize).doSelectPageInfo(new ISelect() {
+      @Override
+      public void doSelect() {
+        mapper.selectUserInfo();
+      }
+    });
+  }
+
 
   @Transactional(readOnly = false)
   public Integer saveToken(Account account, String serverToken) {

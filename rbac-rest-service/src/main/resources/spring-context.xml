@@ -60,7 +60,7 @@
         mappers=org.lanqiao.rbac.base.Mapper
         IDENTITY=MYSQL
       </value>
-    </property>
+0     </property>
     <property name="sqlSessionFactoryBeanName" value="sqlSessionFactory"/>
   </bean>
 

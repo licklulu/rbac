@@ -1,5 +1,7 @@
 package org.lanqiao.rbac.base;
 
+
+import org.lanqiao.rbac.dto.UserDto;
 import org.lanqiao.rbac.entity.Menu;
 import tk.mybatis.mapper.common.BaseMapper;
 import tk.mybatis.mapper.common.ConditionMapper;
@@ -21,4 +23,8 @@ public interface Mapper<T>
 
 
   List<Menu> selectByPid(Integer pid);
+  List<Menu> selectMenuByUserId(Integer userid);
+  List<UserDto> selectUserInfo();
+//  List<UserInfo> selectAccountInfo();
+
 }
