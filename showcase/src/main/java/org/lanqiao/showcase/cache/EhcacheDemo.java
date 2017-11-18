@@ -23,7 +23,7 @@ import static org.assertj.core.api.Assertions.assertThat;
  * <p>
  * 配置见applicationContext-ehcache.xml与ehcache.xml
  *
- * @author calvin
+ *
  */
 @ContextConfiguration(locations = {"/cache/applicationContext-ehcache.xml"})
 public class EhcacheDemo extends AbstractJUnit4SpringContextTests {
